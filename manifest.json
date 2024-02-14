@@ -1,0 +1,113 @@
+{
+	"_version": "1.15.0",
+	"sap.app": {
+		"id": "ns.ui_table_card",
+		"type": "card",
+		"title": "Table Card",
+		"subTitle": "Sample table card",
+		"applicationVersion": {
+			"version": "1.0.1"
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+        "deviceTypes": {"desktop": true, "phone": true, "tablet": true},
+		"icons": {
+			"icon": "sap-icon://table-view"
+		}
+	},
+	"sap.card": {
+		"type": "Table",
+		"extension" : "ext/FormatterExtension",
+        "designtime": "dt/configuration",
+		"requiredHeight": "100%",
+		"configuration": {
+			"destinations" : {
+				"ES5" : {
+					"name" : "ES5",
+					"defaultUrl" : "/sap/opu/odata/iwbep/GWSAMPLE_BASIC/SalesOrderSet"
+				}
+			},
+			"filters": {
+				"count": {
+					"type": "Select",
+					"Label" : "Number of results",
+					"item": {
+						"path": "/",
+						"template": {
+							"key": "{CountID}",
+							"title": "{ResultCount}"
+						}
+					},
+					"data": {
+						"json": [
+							{
+								"CountID" : "0",
+								"ResultCount" : "1-10"
+							},
+							{
+								"CountID" : "10",
+								"ResultCount" : "11-20"
+							},
+							{
+								"CountID" : "20",
+								"ResultCount" : "21-30"
+							},
+							{
+								"CountID" : "30",
+								"ResultCount" : "31-40"
+							}
+						]
+					}
+				}
+			}
+		},
+		"data": {
+			"request" : {
+				"url" : "{{destinations.ES5}}/sap/opu/odata/iwbep/GWSAMPLE_BASIC/SalesOrderSet",
+				"withCredentials": true,
+				"parameters": {
+					"$orderby" : "CreatedAt desc",
+					"$skip": "{filters>/count/selectedItem/key}",
+					"$top": "10"
+				}
+			},
+			"path" : "/d/results/"
+		},
+		"header": {
+			"title": "Sales Orders",
+			"subTitle": "Displaying the most recent sales from {filters>/count/selectedItem/title}"
+		},
+		"content": {
+			"row": {
+				"columns": [{
+						"title": "Sales Order",
+						"value": "{SalesOrderID}",
+						"identifier": true
+					},
+					{
+						"title": "Customer",
+						"value": "{CustomerName}"
+					},
+					{
+						"title": "Net Amount",
+						"value": "{NetAmount}"
+					},
+					{
+						"title": "Billing Status",
+						"value": "{BillingStatusDescription}",
+						"state": "{path: 'BillingStatus', formatter:'extension.formatters.billingStatus'}"
+					},
+					{
+						"title": "Delivery Status",
+						"value": "{DeliveryStatusDescription}",
+						"state": "{path: 'DeliveryStatus', formatter:'extension.formatters.deliveryStatus'}"
+					}
+				]
+			}
+		}
+	},
+    "sap.platform.mobilecards": {
+        "compatible": false
+    }
+}
