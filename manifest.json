@@ -6,7 +6,16 @@
 		"title": "Table Card",
 		"subTitle": "Sample table card",
 		"applicationVersion": {
-			"version": "1.0.1"
+			"version": "1.0.6"
+		}
+	},
+	"sap.ui5" : {
+		"resources" : {
+			"css" : [
+				{
+					"uri": "css/style.css"
+				}
+			]
 		}
 	},
 	"sap.ui": {
@@ -21,11 +30,11 @@
 		"extension" : "ext/FormatterExtension",
         "designtime": "dt/configuration",
 		"requiredHeight": "100%",
+		"requiredWidth" : "600px",
 		"configuration": {
 			"destinations" : {
 				"ES5" : {
-					"name" : "ES5",
-					"defaultUrl" : "/sap/opu/odata/iwbep/GWSAMPLE_BASIC/SalesOrderSet"
+					"name" : "ES5"
 				}
 			},
 			"filters": {
@@ -63,14 +72,11 @@
 			}
 		},
 		"data": {
-			"request" : {
-				"url" : "{{destinations.ES5}}/sap/opu/odata/iwbep/GWSAMPLE_BASIC/SalesOrderSet",
-				"withCredentials": true,
-				"parameters": {
-					"$orderby" : "CreatedAt desc",
-					"$skip": "{filters>/count/selectedItem/key}",
-					"$top": "10"
-				}
+			"extension": {
+				"method": "getData",
+				"args": [
+					"{filters>/count/selectedItem/key}"
+				]
 			},
 			"path" : "/d/results/"
 		},
@@ -102,6 +108,22 @@
 						"title": "Delivery Status",
 						"value": "{DeliveryStatusDescription}",
 						"state": "{path: 'DeliveryStatus', formatter:'extension.formatters.deliveryStatus'}"
+					},
+					{
+						"title": "Overall Status",
+						"value": "{OverallStatusText}",
+						"state":"{path:'OverallStatus', formatter:'extension.formatters.overallStatus'}"
+					}
+				],
+				"actions" : [
+					{
+						"type" : "updateContext",
+						"parameters" : {
+							"namespace" : "ns.ui_table_card",
+							"context" : {
+								"SalesOrderID" : "{SalesOrderID}"
+							}
+						}
 					}
 				]
 			}
